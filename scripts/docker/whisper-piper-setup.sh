@@ -165,9 +165,64 @@ install_gpu() {
 install_cpu() {
     print_info "Starting installation with CPU support..."
     
-    # TODO: Implement CPU-only Docker Compose setup
-    print_warning "CPU installation not yet implemented"
+    # Get the directory where the script is located
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    COMPOSE_FILE="${SCRIPT_DIR}/docker-compose.cpu.yml"
+    
+    # Check if docker-compose.cpu.yml exists
+    if [ ! -f "${COMPOSE_FILE}" ]; then
+        print_error "Docker Compose file not found: ${COMPOSE_FILE}"
+        return 1
+    fi
+    
+    print_info "Using Docker Compose file: ${COMPOSE_FILE}"
     print_info "This will configure Whisper and Piper for CPU-only operation"
+    echo ""
+    
+    # Display service information
+    print_info "Services to be deployed:"
+    echo "  - Whisper (Speech-to-Text) - Port 10300"
+    echo "  - Piper (Text-to-Speech)   - Port 10200"
+    echo ""
+    
+    # Ask for confirmation
+    echo -n "Continue with installation? [y/N]: "
+    read -r confirm
+    if [[ ! $confirm =~ ^[Yy]$ ]]; then
+        print_info "Installation cancelled"
+        return 0
+    fi
+    
+    print_info "Pulling Docker images..."
+    if ! docker compose -f "${COMPOSE_FILE}" pull; then
+        print_error "Failed to pull Docker images"
+        return 1
+    fi
+    print_success "Docker images pulled successfully"
+    
+    print_info "Starting services..."
+    if ! docker compose -f "${COMPOSE_FILE}" up -d; then
+        print_error "Failed to start services"
+        return 1
+    fi
+    print_success "Services started successfully"
+    
+    echo ""
+    print_success "Installation complete!"
+    echo ""
+    print_info "Service endpoints:"
+    echo "  - Whisper: http://localhost:10300"
+    echo "  - Piper:   http://localhost:10200"
+    echo ""
+    print_info "To check service status:"
+    echo "  docker compose -f ${COMPOSE_FILE} ps"
+    echo ""
+    print_info "To view logs:"
+    echo "  docker compose -f ${COMPOSE_FILE} logs -f"
+    echo ""
+    print_info "To stop services:"
+    echo "  docker compose -f ${COMPOSE_FILE} down"
+    echo ""
 }
 
 # Main script execution

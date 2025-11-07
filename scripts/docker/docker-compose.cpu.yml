@@ -1,0 +1,38 @@
+services:
+  whisper:
+    image: rhasspy/wyoming-whisper:latest
+    container_name: whisper-cpu
+    command: --model base --language en
+    restart: unless-stopped
+    ports:
+      - "10300:10300"
+    volumes:
+      - whisper-data:/data
+    environment:
+      - TZ=UTC
+    networks:
+      - voice-services
+
+  piper:
+    image: rhasspy/wyoming-piper:latest
+    container_name: piper-cpu
+    command: --voice en_US-lessac-medium
+    restart: unless-stopped
+    ports:
+      - "10200:10200"
+    volumes:
+      - piper-data:/data
+    environment:
+      - TZ=UTC
+    networks:
+      - voice-services
+
+volumes:
+  whisper-data:
+    driver: local
+  piper-data:
+    driver: local
+
+networks:
+  voice-services:
+    driver: bridge
