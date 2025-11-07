@@ -100,16 +100,6 @@ check_docker() {
     print_success "Docker is installed"
 }
 
-# Function to check if Docker Compose is installed
-check_docker_compose() {
-    print_info "Checking for Docker Compose..."
-    if ! docker compose version &> /dev/null && ! command -v docker-compose &> /dev/null; then
-        print_error "Docker Compose is not installed. Please install Docker Compose first."
-        exit 1
-    fi
-    print_success "Docker Compose is available"
-}
-
 # Function to check for GPU support
 check_gpu() {
     print_info "Checking for GPU support..."
