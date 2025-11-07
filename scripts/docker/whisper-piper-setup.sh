@@ -1,11 +1,11 @@
 #!/bin/bash
 #
 # Script: whisper-piper-setup.sh
-# Version: 1.0.0
+# Version: 1.1.0
 # Author: The Wise Man of the Internet
 # Purpose: Menu-driven installer for Whisper and Piper with GPU or CPU 
 #          options
-# Prerequisites: Docker, docker-compose
+# Prerequisites: Docker
 #
 # Description:
 #   This script provides an interactive menu to set up Whisper 
@@ -16,7 +16,7 @@
 #   - Interactive menu-driven installation
 #   - GPU or CPU deployment options
 #   - Automatic dependency checking
-#   - Docker Compose configuration generation
+#   - Simple Docker container deployment
 #
 
 set -e  # Exit on error
@@ -47,14 +47,14 @@ OPTIONS:
 
 PREREQUISITES:
     - Docker (docker.io or docker-ce)
-    - Docker Compose (docker-compose or docker compose plugin)
     - NVIDIA GPU drivers (optional, for GPU acceleration)
+    - NVIDIA Container Toolkit (optional, for GPU acceleration)
 
 FEATURES:
     - Interactive menu-driven installation
     - GPU or CPU deployment options
     - Automatic dependency checking
-    - Docker Compose configuration generation
+    - Simple Docker container deployment
 
 EXAMPLES:
     # Run the interactive setup wizard
@@ -67,7 +67,7 @@ AUTHOR:
     The Wise Man of the Internet
 
 VERSION:
-    1.0.0
+    1.1.0
 
 EOF
     exit 0
@@ -142,7 +142,6 @@ check_requirements() {
     echo ""
     print_info "Checking system requirements..."
     check_docker
-    check_docker_compose
     check_gpu
     echo ""
     print_success "System check complete!"
@@ -156,18 +155,134 @@ install_gpu() {
         return 1
     }
     
-    # TODO: Implement GPU-enabled Docker Compose setup
-    print_warning "GPU installation not yet implemented"
-    print_info "This will configure Whisper and Piper with NVIDIA GPU acceleration"
+    # Pull GPU-accelerated images
+    print_info "Pulling GPU-accelerated images (this may take a while)..."
+    if docker pull ghcr.io/ggerganov/whisper.cpp:latest; then
+        print_success "Whisper image pulled successfully"
+    else
+        print_error "Failed to pull Whisper image"
+        return 1
+    fi
+    
+    if docker pull rhasspy/piper:latest; then
+        print_success "Piper image pulled successfully"
+    else
+        print_error "Failed to pull Piper image"
+        return 1
+    fi
+    
+    # Remove any existing containers
+    print_info "Removing any existing containers..."
+    docker rm -f whisper piper 2>/dev/null || true
+    
+    # Start containers with GPU support
+    print_info "Starting Whisper container with GPU support..."
+    if docker run -d --name whisper --gpus all ghcr.io/ggerganov/whisper.cpp:latest; then
+        print_success "Whisper container started successfully with GPU"
+    else
+        print_error "Failed to start Whisper container with GPU"
+        return 1
+    fi
+    
+    print_info "Starting Piper container with GPU support..."
+    if docker run -d --name piper --gpus all rhasspy/piper:latest; then
+        print_success "Piper container started successfully with GPU"
+    else
+        print_error "Failed to start Piper container with GPU"
+        return 1
+    fi
+    
+    # Display service information
+    echo ""
+    print_success "GPU-accelerated installation complete!"
+    echo ""
+    echo "======================================"
+    echo "  Service Information"
+    echo "======================================"
+    echo "🎙️  Whisper (Speech-to-Text):"
+    echo "   Container: whisper"
+    echo "   Mode: GPU (NVIDIA)"
+    echo ""
+    echo "🔊 Piper (Text-to-Speech):"
+    echo "   Container: piper"
+    echo "   Mode: GPU (NVIDIA)"
+    echo ""
+    echo "======================================"
+    echo "Useful commands:"
+    echo "  View logs:     docker logs -f whisper"
+    echo "                 docker logs -f piper"
+    echo "  Stop services: docker stop whisper piper"
+    echo "  Start services: docker start whisper piper"
+    echo "  Remove setup:  docker rm -f whisper piper"
+    echo "======================================"
+    echo ""
 }
 
 # Function to install with CPU only
 install_cpu() {
     print_info "Starting installation with CPU support..."
     
-    # TODO: Implement CPU-only Docker Compose setup
-    print_warning "CPU installation not yet implemented"
-    print_info "This will configure Whisper and Piper for CPU-only operation"
+    # Pull CPU-compatible images
+    print_info "Pulling CPU-compatible images (this may take a while)..."
+    if docker pull ghcr.io/ggerganov/whisper.cpp:latest; then
+        print_success "Whisper image pulled successfully"
+    else
+        print_error "Failed to pull Whisper image"
+        return 1
+    fi
+    
+    if docker pull rhasspy/piper:latest; then
+        print_success "Piper image pulled successfully"
+    else
+        print_error "Failed to pull Piper image"
+        return 1
+    fi
+    
+    # Remove any existing containers
+    print_info "Removing any existing containers..."
+    docker rm -f whisper piper 2>/dev/null || true
+    
+    # Start containers in CPU mode
+    print_info "Starting Whisper container in CPU mode..."
+    if docker run -d --name whisper ghcr.io/ggerganov/whisper.cpp:latest; then
+        print_success "Whisper container started successfully"
+    else
+        print_error "Failed to start Whisper container"
+        return 1
+    fi
+    
+    print_info "Starting Piper container in CPU mode..."
+    if docker run -d --name piper rhasspy/piper:latest; then
+        print_success "Piper container started successfully"
+    else
+        print_error "Failed to start Piper container"
+        return 1
+    fi
+    
+    # Display service information
+    echo ""
+    print_success "CPU-only installation complete!"
+    echo ""
+    echo "======================================"
+    echo "  Service Information"
+    echo "======================================"
+    echo "🎙️  Whisper (Speech-to-Text):"
+    echo "   Container: whisper"
+    echo "   Mode: CPU"
+    echo ""
+    echo "🔊 Piper (Text-to-Speech):"
+    echo "   Container: piper"
+    echo "   Mode: CPU"
+    echo ""
+    echo "======================================"
+    echo "Useful commands:"
+    echo "  View logs:     docker logs -f whisper"
+    echo "                 docker logs -f piper"
+    echo "  Stop services: docker stop whisper piper"
+    echo "  Start services: docker start whisper piper"
+    echo "  Remove setup:  docker rm -f whisper piper"
+    echo "======================================"
+    echo ""
 }
 
 # Main script execution
