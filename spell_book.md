@@ -67,6 +67,11 @@ provided bash command. The command will:
 2. 🔐 Execute it securely with proper error handling
 3. 🎭 Guide you through any interactive options
 
+**⚠️ Security Note:** Always review scripts before executing them,
+especially when downloading from the internet. You can inspect any
+scroll by viewing it on GitHub first, or download it locally to review
+before running.
+
 **Prerequisites:** Most scrolls require basic tools like `curl`,
 `bash`, and specific dependencies (e.g., Docker). Check each scroll's
 description for details.

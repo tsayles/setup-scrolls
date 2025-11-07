@@ -59,6 +59,9 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/tsayles/setup-scrolls/re
 - Keep placeholder text for empty categories
 - Preserve the header, footer, and "How to Use" sections
 - Maintain the emoji decorations and formatting style
+- **Important:** Always include the security warning in the "How to
+  Use These Scrolls" section to remind users to review scripts before
+  execution
 
 ### 5. Preserve Style Guidelines
 
@@ -94,9 +97,9 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/tsayles/setup-scrolls/re
 does and why it's useful.
 
 **Download & Run:**
-\```bash
+```bash
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/tsayles/setup-scrolls/refs/heads/main/scripts/category/script-name.sh)"
-\```
+```
 
 **Features:**
 - 🎯 First key feature
