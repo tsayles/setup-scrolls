@@ -22,6 +22,11 @@ setup-scrolls/
 └── CONTRIBUTING.md          # How others may submit scrolls to the collection
 ```
 
+## 📖 Spell Book
+
+For a complete catalog of all available scrolls with download commands
+and detailed descriptions, see the [Spell Book](spell_book.md).
+
 ## 🧪 Example Scrolls
 
 - 🐳 `docker/whisper-piper-setup.sh`: Menu-driven installer for Whisper and Piper, with GPU or CPU options

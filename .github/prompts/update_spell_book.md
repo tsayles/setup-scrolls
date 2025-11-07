@@ -50,7 +50,19 @@ the download command:
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/tsayles/setup-scrolls/refs/heads/main/scripts/<category>/<script-name>.sh)"
 ```
 
-### 4. Update spell_book.md
+### 4. Generate Review Link
+
+For each script at path `scripts/<category>/<script-name>.sh`, create
+a review link that opens the GitHub page for the script file:
+
+```
+https://github.com/tsayles/setup-scrolls/blob/main/scripts/<category>/<script-name>.sh
+```
+
+This link should be placed on the same line as the **Script:** field,
+separated by a pipe character (|) and labeled with "📄 Review Script".
+
+### 5. Update spell_book.md
 
 - Maintain the existing structure and style of spell_book.md
 - Add new scrolls to the appropriate category section
@@ -62,8 +74,10 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/tsayles/setup-scrolls/re
 - **Important:** Always include the security warning in the "How to
   Use These Scrolls" section to remind users to review scripts before
   execution
+- **Important:** Always include the review link for each script on the
+  same line as the **Script:** field
 
-### 5. Preserve Style Guidelines
+### 6. Preserve Style Guidelines
 
 - Use 80-column line width for markdown text
 - Maintain consistent emoji usage:
@@ -77,7 +91,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/tsayles/setup-scrolls/re
 - Keep the mystical/magical theme in descriptions
 - Use proper markdown formatting with headers, code blocks, and lists
 
-### 6. Handle Edge Cases
+### 7. Handle Edge Cases
 
 - If a script has no header comments, add it with a generic
   description and note that it needs documentation
@@ -91,7 +105,8 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/tsayles/setup-scrolls/re
 ```markdown
 ### 🎯 Script Display Name
 
-**Script:** `scripts/category/script-name.sh`
+**Script:** `scripts/category/script-name.sh` | 
+[📄 Review Script](https://github.com/tsayles/setup-scrolls/blob/main/scripts/category/script-name.sh)
 
 **Description:** Brief 1-2 sentence description of what the script
 does and why it's useful.

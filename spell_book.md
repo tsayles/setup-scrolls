@@ -14,7 +14,8 @@ specific tasks in your digital realm.
 
 ### 🎙️ Whisper & Piper Setup
 
-**Script:** `scripts/docker/whisper-piper-setup.sh`
+**Script:** `scripts/docker/whisper-piper-setup.sh` | 
+[📄 Review Script](https://github.com/tsayles/setup-scrolls/blob/main/scripts/docker/whisper-piper-setup.sh)
 
 **Description:** An interactive menu-driven installer that conjures
 Whisper (speech-to-text) and Piper (text-to-speech) services using
