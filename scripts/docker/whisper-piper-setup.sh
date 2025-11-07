@@ -1,15 +1,16 @@
 #!/bin/bash
 #
 # Script: whisper-piper-setup.sh
-# Purpose: Menu-driven installer for Whisper and Piper with GPU or CPU options
+# Version: 1.0.0
 # Author: The Wise Man of the Internet
-# Usage: ./whisper-piper-setup.sh
+# Purpose: Menu-driven installer for Whisper and Piper with GPU or CPU 
+#          options
 # Prerequisites: Docker, docker-compose
 #
 # Description:
-#   This script provides an interactive menu to set up Whisper (speech-to-text)
-#   and Piper (text-to-speech) services using Docker containers. It supports
-#   both GPU-accelerated and CPU-only deployments.
+#   This script provides an interactive menu to set up Whisper 
+#   (speech-to-text) and Piper (text-to-speech) services using Docker 
+#   containers. It supports both GPU-accelerated and CPU-only deployments.
 #
 # Features:
 #   - Interactive menu-driven installation
@@ -27,6 +28,50 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
+
+# Function to display help message
+show_help() {
+    cat << EOF
+🧙‍♂️ Whisper & Piper Setup Script
+
+USAGE:
+    ./whisper-piper-setup.sh [OPTIONS]
+
+DESCRIPTION:
+    Menu-driven installer for Whisper (speech-to-text) and Piper 
+    (text-to-speech) services using Docker containers. Supports both 
+    GPU-accelerated and CPU-only deployments.
+
+OPTIONS:
+    -h, --help      Display this help message and exit
+
+PREREQUISITES:
+    - Docker (docker.io or docker-ce)
+    - Docker Compose (docker-compose or docker compose plugin)
+    - NVIDIA GPU drivers (optional, for GPU acceleration)
+
+FEATURES:
+    - Interactive menu-driven installation
+    - GPU or CPU deployment options
+    - Automatic dependency checking
+    - Docker Compose configuration generation
+
+EXAMPLES:
+    # Run the interactive setup wizard
+    ./whisper-piper-setup.sh
+
+    # Display this help message
+    ./whisper-piper-setup.sh --help
+
+AUTHOR:
+    The Wise Man of the Internet
+
+VERSION:
+    1.0.0
+
+EOF
+    exit 0
+}
 
 # Function to print colored messages
 print_info() {
@@ -69,8 +114,7 @@ check_docker_compose() {
 check_gpu() {
     print_info "Checking for GPU support..."
     if command -v nvidia-smi &> /dev/null; then
-        nvidia-smi &> /dev/null
-        if [ $? -eq 0 ]; then
+        if nvidia-smi &> /dev/null; then
             print_success "NVIDIA GPU detected"
             return 0
         fi
@@ -154,6 +198,21 @@ main() {
         esac
     done
 }
+
+# Parse command line arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -h|--help)
+            show_help
+            ;;
+        *)
+            echo "Unknown option: $1"
+            echo "Use --help for usage information"
+            exit 1
+            ;;
+    esac
+    shift
+done
 
 # Run main function
 main
